@@ -9,8 +9,10 @@ app.use(bodyParser.json());
 
 //imp routes
 const classroomsRoute = require("./routes/classrooms");
+const usersRoute = require("./routes/users");
 
 app.use("/classroom", classroomsRoute);
+app.use("/user", usersRoute);
 
 //routes
 app.get("/", (req, res) => {

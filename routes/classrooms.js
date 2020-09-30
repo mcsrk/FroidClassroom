@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Classroom = require("../models/Classrooms");
+const Classroom = require("../models/Classroom");
 
 //GET ALL
 router.get("/", async (req, res) => {
@@ -46,11 +46,11 @@ router.get("/:classroomId", async (req, res) => {
   }
 });
 
-//delete classroom
+//DELETE {index}
 router.delete("/:classroomId", async (req, res) => {
   try {
     const revomovedClassroom = await Classroom.remove({
-      id_classroom: req.params.classroomId,
+      _id: req.params.classroomId,
     });
     res.json(revomovedClassroom);
   } catch (err) {
@@ -59,11 +59,11 @@ router.delete("/:classroomId", async (req, res) => {
 });
 
 //update classroom
-router.patch("/:classroomId", async (req, res) => {
+router.put("/:classroomId", async (req, res) => {
   try {
     const updatedClassroom = await Classroom.updateOne(
       {
-        id_classroom: req.params.classroomId,
+        _id: req.params.classroomId,
       },
       {
         $set: {
