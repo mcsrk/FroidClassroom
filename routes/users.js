@@ -64,10 +64,10 @@ router.put("/:userId", async (req, res) => {
       },
       {
         $set: {
-          id_user: req.body.id_classroom,
-          firstName: req.body.name,
-          lastName: req.body.teacher,
-          classrooms: req.body.room,
+          id_user: req.body.id_user,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          classrooms: req.body.classrooms,
         },
       }
     );
