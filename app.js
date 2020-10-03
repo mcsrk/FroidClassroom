@@ -16,9 +16,13 @@ app.use("/user", usersRoute);
 
 //routes
 app.get("/", (req, res) => {
-  res.send("we are on home");
+  res.send("routes: /classroom /user");
 });
-
+//error handling middleware
+app.use((err, req, res, next) => {
+  // console.log(err);
+  res.status(422).send({ error: err.message });
+});
 //conect db
 mongoose.connect(
   process.env.DB_CONECTION,
@@ -28,4 +32,6 @@ mongoose.connect(
 );
 
 //starting
-app.listen(3000);
+app.listen(3000, (port) => {
+  console.log("Server's ON at localhost:3000");
+});

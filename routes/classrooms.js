@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Classroom = require("../models/Classroom");
+const User = require("../models/User");
 
 //GET ALL
 router.get("/", async (req, res) => {
@@ -18,16 +19,25 @@ router.get("/index", (req, res) => {
 
 //POST
 router.post("/", async (req, res) => {
-  const classroom = new Classroom({
-    id_classroom: req.body.id_classroom,
-    name: req.body.name,
-    teacher: req.body.teacher,
-    room: req.body.room,
-    content: req.body.content,
-    students: req.body.students,
-    comments: req.body.comments,
-  });
+  let theProfessor, professor_id;
   try {
+    //obtain the professor id
+    theProfessor = await User.find({ id_user: req.body.teacher }).select(
+      "id_user rol_professor"
+    );
+    professor_id = theProfessor[0]._id;
+    isProfessor = theProfessor[0].rol_professor;
+    //nest the professor id into classroom object
+    const classroom = new Classroom({
+      id_classroom: req.body.id_classroom,
+      name: req.body.name,
+      teacher: professor_id,
+      room: req.body.room,
+      content: req.body.content,
+      students: req.body.students,
+      comments: req.body.comments,
+    });
+
     const savedClassroom = await classroom.save();
     res.json(savedClassroom);
   } catch (err) {

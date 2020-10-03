@@ -1,4 +1,5 @@
 const express = require("express");
+const Classroom = require("../models/Classroom");
 const router = express.Router();
 const User = require("../models/User");
 
@@ -10,10 +11,6 @@ router.get("/", async (req, res) => {
   } catch (err) {
     res.json({ message: err });
   }
-});
-
-router.get("/index", (req, res) => {
-  res.send("we are in the classroom index");
 });
 
 //GET {index}
@@ -29,13 +26,24 @@ router.get("/:userId", async (req, res) => {
 
 //POST
 router.post("/", async (req, res) => {
-  const user = new User({
-    id_user: req.body.id_user,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    classrooms: req.body.classrooms,
-  });
   try {
+    let theClassrooms = [req.body.classrooms.length],
+      temp;
+    //get classrooms ids
+    for (let index = 0; index < req.body.classrooms.length; index++) {
+      temp = await Classroom.find({
+        id_classroom: req.body.classrooms[index],
+      }).select("_id");
+      theClassrooms[index] = temp[0]._id;
+      console.log(theClassrooms[index]);
+    }
+    const user = new User({
+      id_user: req.body.id_user,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      classrooms: theClassrooms,
+      rol_professor: req.body.rol_professor,
+    });
     const savedUser = await user.save();
     res.json(savedUser);
   } catch (err) {
@@ -68,6 +76,7 @@ router.put("/:userId", async (req, res) => {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           classrooms: req.body.classrooms,
+          rol_professor: req.body.rol_professor,
         },
       }
     );
@@ -77,4 +86,23 @@ router.put("/:userId", async (req, res) => {
   }
 });
 
+//GET ALL
+router.get("/classrooms/:userId", async (req, res) => {
+  try {
+    const theUser = await User.findById(req.params.userId);
+
+    let theClassrooms = [theUser.classrooms.length],
+      temp;
+    //get classrooms ids
+    for (let index = 0; index < theUser.classrooms.length; index++) {
+      temp = await Classroom.find({
+        _id: theUser.classrooms[index],
+      });
+      theClassrooms[index] = temp;
+    }
+    res.json(theClassrooms);
+  } catch (err) {
+    res.json({ message: err });
+  }
+});
 module.exports = router;
