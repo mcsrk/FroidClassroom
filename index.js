@@ -32,6 +32,6 @@ mongoose.connect(
 );
 
 //starting
-app.listen(3000, (port) => {
+app.listen(3000, () => {
   console.log("Server's ON at localhost:3000");
 });
