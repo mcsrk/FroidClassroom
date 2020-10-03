@@ -25,7 +25,7 @@ app.use((err, req, res, next) => {
 });
 //conect db
 mongoose.connect(
-  process.env.DB_CONECTION,
+  "mongodb+srv://developer:bigj@classes-api.sajur.mongodb.net/test?retryWrites=true&w=majority",
   { useNewUrlParser: true },
   { useUnifiedTopology: true },
   () => console.log("we are on db")
